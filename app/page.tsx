@@ -9,6 +9,7 @@ import Selector from "@/components/Select/Selector";
 import Datepicker from "@/components/DatePicker/Datepicker";
 import moment from "moment";
 import getDatesBetween from "@/Helpers/getDatesBetween";
+import { LineChartLocal } from "@/components/charts/LineChartLocal";
 
 let parseData: Array<interfaces.inputData> = JSON.parse(
   JSON.stringify(
@@ -47,56 +48,49 @@ const calculateStats = (
   age: string,
   gender: string,
   arrayOfDates: Array<string>
-): interfaces.featureData => {
-  if (age === "" && gender === "" && arrayOfDates.length === 0)
-    return { Age: age, Day: "", Gender: gender, chartData: [] };
+): Array<interfaces.inputData> => {
+  let filteredData =
+    age === "" ? parseData : parseData.filter((item) => item.Age === age);
+  filteredData =
+    gender === ""
+      ? filteredData
+      : filteredData.filter((item) => item.Gender === gender);
+  filteredData =
+    arrayOfDates.length === 0
+      ? filteredData
+      : filteredData.filter((item) => arrayOfDates.includes(item.Day));
 
-  let filteredData;
-
-  if (age && !gender)
-    filteredData = parseData.filter((item) => item.Age === age);
-  else if (!age && gender)
-    filteredData = parseData.filter((item) => item.Gender === gender);
-  else
-    filteredData = parseData.filter(
-      (item) => item.Gender === gender && item.Age === age
-    );
-
-  let totalData: interfaces.inputData = {
-    Age: age,
-    Day: "",
-    Gender: gender,
-    A: 0,
-    B: 0,
-    C: 0,
-    D: 0,
-    E: 0,
-    F: 0,
-  };
-
-  filteredData.forEach((item) => {
-    totalData.A = +totalData.A + +item.A;
-    totalData.B = +totalData.B + +item.B;
-    totalData.C = +totalData.C + +item.C;
-    totalData.D = +totalData.D + +item.D;
-    totalData.E = +totalData.E + +item.E;
-    totalData.F = +totalData.F + +item.F;
-  });
-
-  return SimplifyChartData(totalData);
+  return filteredData;
 };
 
 export default function Home() {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [startAndEndDate, setStartandEndDate] = useState(["", ""]);
+  const [startAndEndDate, setStartandEndDate] = useState(["", ""] as [
+    string,
+    string
+  ]);
 
-  const arrayOfDates = useMemo(
+  const [featureName, setFeatureName] = useState("");
+  const [lineChartData, setLineChartData] = useState(
+    [] as Array<interfaces.inputData>
+  );
+
+  const arrayOfDates: Array<string> = useMemo(
     () => getDatesBetween(startAndEndDate[0], startAndEndDate[1]),
     [startAndEndDate]
   );
 
   let chartDataNew = calculateStats(age, gender, arrayOfDates);
+
+  function getLineChartData(
+    lineData: Array<interfaces.inputData>,
+    featureName: string
+  ) {
+    console.log("inside line chart page.tsx", lineData, featureName);
+    setFeatureName(featureName);
+    setLineChartData(lineData);
+  }
 
   return (
     <main>
@@ -104,21 +98,30 @@ export default function Home() {
         Hi there, Data visualization goes here {age} {gender}
       </div>
       <div className="flex p-4 justify-start items-center flex-wrap ">
+        <Datepicker setStartandEndDate={setStartandEndDate} />
         <Selector label="Age" filterParams={ageFilter} onChangeFunc={setAge} />
         <Selector
           label="Gender"
           filterParams={genderFilter}
           onChangeFunc={setGender}
         />
-        <Datepicker setStartandEndDate={setStartandEndDate} />
       </div>
       <div className="flex justify-center items-center p-4 mt-12">
-        <div className="w-[600px]">
+        <div className="w-full flex">
           <HorizontalChart
             yAxisKeyName="featureName"
             xAxisKeyName="value"
-            chartData={chartDataNew.chartData}
+            chartData={chartDataNew}
+            getDataForLineChart={getLineChartData}
+            arrayOfDates={arrayOfDates}
           />
+          {lineChartData.length > 0 && (
+            <LineChartLocal
+              xAxisKeyName="Day"
+              yAxisKeyName={featureName}
+              chartData={lineChartData}
+            />
+          )}
         </div>
       </div>
     </main>

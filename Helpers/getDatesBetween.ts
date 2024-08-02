@@ -1,6 +1,9 @@
 import moment from "moment";
 
 export default function getDatesBetween(startDate: string, endDate: string): Array<string> {
+
+    if(startDate === "" || endDate === "") return []
+    
     const dates = [];
     let currentDate = moment(startDate);
     let endDateMoment = moment(endDate);

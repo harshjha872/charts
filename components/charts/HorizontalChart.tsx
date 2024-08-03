@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/chart";
 
 import * as interfaces from "@/Helpers/interfaces/interface";
+import { useCallback, memo } from "react";
 
 const chartConfig = {
   value: {
@@ -82,43 +83,43 @@ const HorizontalChart = ({
 }) => {
   let updatedChartData = getTotalSumOfAllData(chartData, arrayOfDates);
 
-  function calcLineData(
-    featureName: string,
-    data: Array<interfaces.inputData>
-  ) {
-    let obj = {} as any;
+  const calcLineData = useCallback(
+    (featureName: string, data: Array<interfaces.inputData>) => {
+      let obj = {} as any;
 
-    data.forEach((item) => {
-      if (item.Day in obj) {
-        obj[item.Day].A += +item.A;
-        obj[item.Day].B += +item.B;
-        obj[item.Day].C += +item.C;
-        obj[item.Day].D += +item.D;
-        obj[item.Day].E += +item.E;
-        obj[item.Day].F += +item.F;
-      } else {
-        obj[item.Day] = {
-          ...item,
-          A: +item.A,
-          B: +item.B,
-          C: +item.C,
-          D: +item.D,
-          E: +item.E,
-          F: +item.F,
-        };
-      }
-    });
+      data.forEach((item) => {
+        if (item.Day in obj) {
+          obj[item.Day].A += +item.A;
+          obj[item.Day].B += +item.B;
+          obj[item.Day].C += +item.C;
+          obj[item.Day].D += +item.D;
+          obj[item.Day].E += +item.E;
+          obj[item.Day].F += +item.F;
+        } else {
+          obj[item.Day] = {
+            ...item,
+            A: +item.A,
+            B: +item.B,
+            C: +item.C,
+            D: +item.D,
+            E: +item.E,
+            F: +item.F,
+          };
+        }
+      });
 
-    let dates = Object.keys(obj);
+      let dates = Object.keys(obj);
 
-    getDataForLineChart(
-      dates.map((date) => obj[date]),
-      featureName
-    );
-  }
+      getDataForLineChart(
+        dates.map((date) => obj[date]),
+        featureName
+      );
+    },
+    [getDataForLineChart]
+  );
 
   return (
-    <Card className="w-1/2 m-4">
+    <Card className="sm:w-1/2 m-4">
       <CardHeader>
         <CardTitle>Bar Chart - Custom Label</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
@@ -185,4 +186,4 @@ const HorizontalChart = ({
   );
 };
 
-export default HorizontalChart;
+export default memo(HorizontalChart);

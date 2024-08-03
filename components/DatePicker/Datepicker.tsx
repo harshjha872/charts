@@ -9,7 +9,6 @@ const Datepicker = ({
 }: {
   setStartandEndDate: Dispatch<SetStateAction<[string, string]>>;
 }) => {
-  console.log("date picker called");
   return (
     <div className="flex items-center mx-4 my-2">
       <Label htmlFor="Date" className="mx-2">

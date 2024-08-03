@@ -17,6 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import moment from "moment";
 
 const chartConfig = {
   desktop: {
@@ -28,8 +29,9 @@ const chartConfig = {
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
+import { memo } from "react";
 
-export function LineChartLocal({
+const LineChartLocal = ({
   xAxisKeyName,
   yAxisKeyName,
   chartData,
@@ -37,11 +39,11 @@ export function LineChartLocal({
   xAxisKeyName: string;
   yAxisKeyName: string;
   chartData: Array<interfaces.inputData>;
-}) {
+}) => {
   return (
-    <Card className="w-1/2 m-4">
+    <Card className="sm:w-1/2 m-4 ">
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
+        <CardTitle>Line Chart for feature {yAxisKeyName}</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -60,7 +62,9 @@ export function LineChartLocal({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) =>
+                moment(value, "YYYY-MM-DD").format("D MMM")
+              }
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
@@ -94,4 +98,6 @@ export function LineChartLocal({
       </CardFooter>
     </Card>
   );
-}
+};
+
+export default memo(LineChartLocal);

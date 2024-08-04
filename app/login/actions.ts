@@ -18,12 +18,11 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    console.log(error);
-    redirect("/error");
+    return { err: error.message }
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signup(formData: FormData) {
@@ -36,22 +35,23 @@ export async function signup(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signUp(data);
+  const { error  } = await supabase.auth.signUp(data);
 
   if (error) {
-    console.log(error);
-    redirect("/error");
+    return { err: error.message }
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signOut() {
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
 
-  if (error) console.log(error);
+  if (error) {
+    return { err: error.message }
+  }
 
   redirect("/login");
 }

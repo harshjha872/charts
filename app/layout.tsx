@@ -3,6 +3,8 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/Navbar/Navbar";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,6 +29,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Toaster />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -34,9 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex flex-col h-screen min-h-0">
-            <div className="h-12 bg-zinc-100 flex justify-between items-center px-8">
-              <div>Charts</div>
-            </div>
+          <Navbar/>
             <div className="flex-1">{children}</div>
           </div>
         </ThemeProvider>

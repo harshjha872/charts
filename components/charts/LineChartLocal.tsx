@@ -43,7 +43,9 @@ const LineChartLocal = ({
   return (
     <Card className="sm:w-1/2 m-4 ">
       <CardHeader>
-        <CardTitle>Line Chart for feature {yAxisKeyName}</CardTitle>
+        <CardTitle>
+          Line Chart for {yAxisKeyName === "" ? "All" : yAxisKeyName} feature
+        </CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,20 +69,36 @@ const LineChartLocal = ({
               }
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line
-              dataKey={yAxisKeyName}
-              type="linear"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
-            />
-            {/* <Line
-              dataKey="mobile"
-              type="linear"
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
-              dot={false}
-            /> */}
+            {yAxisKeyName ? (
+              <Line
+                dataKey={yAxisKeyName}
+                type="linear"
+                stroke={
+                  "#" +
+                  ((Math.random() * 0xffffff) << 0)
+                    .toString(16)
+                    .padStart(6, "0")
+                }
+                strokeWidth={2}
+                dot={false}
+              />
+            ) : (
+              ["A", "B", "C", "D", "E", "F"].map((feature) => (
+                <Line
+                  dataKey={feature}
+                  type="linear"
+                  stroke={
+                    "#" +
+                    ((Math.random() * 0xffffff) << 0)
+                      .toString(16)
+                      .padStart(6, "0")
+                  }
+                  key={Math.random()}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              ))
+            )}
           </LineChart>
         </ChartContainer>
       </CardContent>

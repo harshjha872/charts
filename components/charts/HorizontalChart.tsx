@@ -16,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   ChartConfig,
   ChartContainer,
@@ -25,7 +24,9 @@ import {
 } from "@/components/ui/chart";
 
 import * as interfaces from "@/Helpers/interfaces/interface";
-import { useCallback, memo } from "react";
+import { useCallback, memo, Dispatch, SetStateAction, useMemo } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const chartConfig = {
   value: {
@@ -41,6 +42,9 @@ const getTotalSumOfAllData = (
   filteredData: Array<interfaces.inputData>,
   arrayOfDates: Array<string>
 ): interfaces.featureData => {
+  if (filteredData.length === 0)
+    return { Age: "", Gender: "", Day: "", chartData: [] };
+
   let totalData: interfaces.inputData = {
     Age: filteredData[0].Age,
     Day: JSON.stringify(arrayOfDates),
@@ -69,54 +73,68 @@ const HorizontalChart = ({
   chartData,
   yAxisKeyName,
   xAxisKeyName,
-  getDataForLineChart,
   arrayOfDates,
+  setFeatureName,
 }: {
   chartData: Array<interfaces.inputData>;
   yAxisKeyName: string;
   xAxisKeyName: string;
-  getDataForLineChart: (
-    lineData: Array<interfaces.inputData>,
-    featureName: string
-  ) => void;
   arrayOfDates: Array<string>;
+  setFeatureName: Dispatch<SetStateAction<string>>;
 }) => {
-  let updatedChartData = getTotalSumOfAllData(chartData, arrayOfDates);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const calcLineData = useCallback(
-    (featureName: string, data: Array<interfaces.inputData>) => {
-      let obj = {} as any;
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
 
-      data.forEach((item) => {
-        if (item.Day in obj) {
-          obj[item.Day].A += +item.A;
-          obj[item.Day].B += +item.B;
-          obj[item.Day].C += +item.C;
-          obj[item.Day].D += +item.D;
-          obj[item.Day].E += +item.E;
-          obj[item.Day].F += +item.F;
-        } else {
-          obj[item.Day] = {
-            ...item,
-            A: +item.A,
-            B: +item.B,
-            C: +item.C,
-            D: +item.D,
-            E: +item.E,
-            F: +item.F,
-          };
-        }
-      });
-
-      let dates = Object.keys(obj);
-
-      getDataForLineChart(
-        dates.map((date) => obj[date]),
-        featureName
-      );
+      return params.toString();
     },
-    [getDataForLineChart]
+    [searchParams]
   );
+
+  let updatedChartData = useMemo(
+    () => getTotalSumOfAllData(chartData, arrayOfDates),
+    [chartData, arrayOfDates]
+  );
+
+  // const calcLineData = useCallback(
+  //   (featureName: string, data: Array<interfaces.inputData>) => {
+  //     let obj = {} as any;
+
+  //     data.forEach((item) => {
+  //       if (item.Day in obj) {
+  //         obj[item.Day].A += +item.A;
+  //         obj[item.Day].B += +item.B;
+  //         obj[item.Day].C += +item.C;
+  //         obj[item.Day].D += +item.D;
+  //         obj[item.Day].E += +item.E;
+  //         obj[item.Day].F += +item.F;
+  //       } else {
+  //         obj[item.Day] = {
+  //           ...item,
+  //           A: +item.A,
+  //           B: +item.B,
+  //           C: +item.C,
+  //           D: +item.D,
+  //           E: +item.E,
+  //           F: +item.F,
+  //         };
+  //       }
+  //     });
+
+  //     let dates = Object.keys(obj);
+
+  //     getDataForLineChart(
+  //       dates.map((date) => obj[date]),
+  //       featureName
+  //     );
+  //   },
+  //   [getDataForLineChart]
+  // );
 
   return (
     <Card className="sm:w-1/2 m-4">
@@ -154,7 +172,16 @@ const HorizontalChart = ({
               layout="vertical"
               fill="var(--color-value)"
               radius={4}
-              onClick={(e) => calcLineData(e.featureName, chartData)}
+              onClick={(e) => {
+                router.push(
+                  pathname +
+                    "?" +
+                    createQueryString("lineChartFeatureName", e.featureName)
+                );
+                // calcLineData(e.featureName, chartData);
+                setCookie("lineChartFeatureName", e.featureName);
+                setFeatureName(e.featureName);
+              }}
             >
               <LabelList
                 dataKey={yAxisKeyName}

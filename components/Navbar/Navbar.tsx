@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import Logout from "@/app/login/Logout";
-import { LogIn } from "lucide-react";
+import { UserRoundPlus } from "lucide-react";
 import { Button } from "../ui/button";
 
 const Navbar = async () => {
@@ -16,7 +16,7 @@ const Navbar = async () => {
       {error || !data?.user ? (
         <Link href="/login">
           <Button variant="ghost">
-            <LogIn size={17}/>
+            <UserRoundPlus size={18} />
           </Button>
         </Link>
       ) : (

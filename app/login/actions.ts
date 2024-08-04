@@ -2,10 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/utils/supabase/server";
 
-export async function login(formData: FormData) {
+export async function login(formData: FormData, searchParams: string) {
   const supabase = createClient();
 
   // type-casting here for convenience
@@ -18,11 +17,12 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    return { err: error.message }
+    return { err: error.message };
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+
+  redirect("/dashboard" + searchParams);
 }
 
 export async function signup(formData: FormData) {
@@ -35,10 +35,10 @@ export async function signup(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { error  } = await supabase.auth.signUp(data);
+  const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    return { err: error.message }
+    return { err: error.message };
   }
 
   revalidatePath("/", "layout");
@@ -50,7 +50,7 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { err: error.message }
+    return { err: error.message };
   }
 
   redirect("/login");

@@ -15,9 +15,12 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
   return (
     <form className="flex h-full items-center justify-center">
@@ -47,7 +50,10 @@ export default function LoginPage() {
             <Button
               formAction={async (formData) => {
                 startTransition(async () => {
-                  const res = await login(formData);
+                  const res = await login(
+                    formData,
+                    Object.keys(params).length > 0 ? params.toString() : ""
+                  );
                   if (res.err) toast.error(res.err);
                   else toast.success("Logged In!");
                 });

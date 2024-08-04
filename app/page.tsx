@@ -1,39 +1,14 @@
 import { redirect } from "next/navigation";
-// import { getSession, login, logout } from "@/utils/auth/auth";
-
-// export default async function Page() {
-//   const session = await getSession();
-//   return (
-//     <section>
-//       <form
-//         action={async (formData) => {
-//           "use server";
-//           await login(formData);
-//           redirect("/");
-//         }}
-//       >
-//         <input type="email" placeholder="Email" />
-//         <br />
-//         <button type="submit">Login</button>
-//       </form>
-//       <form
-//         action={async () => {
-//           "use server";
-//           await logout();
-//           redirect("/");
-//         }}
-//       >
-//         <button type="submit">Logout</button>
-//       </form>
-//       <pre>{JSON.stringify(session, null, 2)}</pre>
-//     </section>
-//   );
-// }
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <div>Hello this is home</div>
-    </>
+    <div className="p-8">
+      <div className="mb-4">Go to dashboard to access charts</div>
+      <Link href="/dashboard">
+        <Button>Dashboard</Button>
+      </Link>
+    </div>
   );
 }

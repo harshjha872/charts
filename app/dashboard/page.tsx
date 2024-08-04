@@ -125,6 +125,7 @@ export default function Dashboard() {
     dateRangeUrl = getCookie("daterange") || "";
 
     const params = new URLSearchParams(searchParams.toString());
+
     if (ageUrl) params.set("age", ageUrl.toString());
     if (genderUrl) params.set("gender", genderUrl.toString());
     if (lineChartFeatureNameUrl)
@@ -145,7 +146,7 @@ export default function Dashboard() {
     [startAndEndDate]
   );
 
-  let chartDataNew = useMemo(
+  const chartDataNew = useMemo(
     () => calculateStats(age, gender, arrayOfDates),
     [age, gender, arrayOfDates]
   );

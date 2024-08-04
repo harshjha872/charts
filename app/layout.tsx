@@ -33,10 +33,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="h-12 bg-zinc-100 flex justify-between items-center px-8">
-            <div>Charts</div>
+          <div className="flex flex-col h-screen min-h-0">
+            <div className="h-12 bg-zinc-100 flex justify-between items-center px-8">
+              <div>Charts</div>
+            </div>
+            <div className="flex-1">{children}</div>
           </div>
-          {children}
         </ThemeProvider>
       </body>
     </html>

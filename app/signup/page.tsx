@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { signup } from "../login/actions";
 import Link from "next/link";
@@ -44,17 +44,23 @@ export default function CreateAccount() {
             </div>
             <div className="mt-4">
               <Label htmlFor="password">Password</Label>
-              <Input minLength={6} id="password" name="password" type="password" required />
+              <Input
+                minLength={6}
+                id="password"
+                name="password"
+                type="password"
+                required
+              />
             </div>
             <Button
               formAction={async (formData) => {
                 startTransition(async () => {
                   const res = await signup(formData);
-                  if(res.err) toast.error(res.err)
-                  else toast.success('Signed up!')
-                })
+                  if (res.err) toast.error(res.err);
+                  else toast.success("Signed up!");
+                });
               }}
-              disabled={isPending}
+              disabled
               className="w-full mt-8"
             >
               Sign up

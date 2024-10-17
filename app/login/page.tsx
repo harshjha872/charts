@@ -58,7 +58,7 @@ export default function LoginPage() {
                   else toast.success("Logged In!");
                 });
               }}
-              disabled={isPending}
+              disabled
               type="submit"
               className="w-full mt-8"
             >

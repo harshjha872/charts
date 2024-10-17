@@ -47,7 +47,8 @@ const LineChartLocal = ({
           Line Chart for {yAxisKeyName === "" ? "All" : yAxisKeyName} feature
         </CardTitle>
         <CardDescription className="text-zinc-600">
-          Click on bar chart to alter line chart to specific feature
+          Click on a specific bar in bar chart on the left to alter line chart
+          to specific feature
         </CardDescription>
       </CardHeader>
       <CardContent>

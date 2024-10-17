@@ -55,24 +55,24 @@ export async function updateSession(request: NextRequest) {
   //   return NextResponse.redirect(url);
   // }
 
-  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
-    const {
-      nextUrl: { search },
-    } = request;
-    const urlSearchParams = new URLSearchParams(search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    const url = request.nextUrl.clone();
-    // if (Object.keys(params).length === 0) url.pathname = "/login";
-    // else url.pathname = "/login" + "?" + urlSearchParams.toString();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
+  // if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+  //   const {
+  //     nextUrl: { search },
+  //   } = request;
+  //   const urlSearchParams = new URLSearchParams(search);
+  //   const params = Object.fromEntries(urlSearchParams.entries());
+  //   const url = request.nextUrl.clone();
+  //   // if (Object.keys(params).length === 0) url.pathname = "/login";
+  //   // else url.pathname = "/login" + "?" + urlSearchParams.toString();
+  //   url.pathname = "/login";
+  //   return NextResponse.redirect(url);
+  // }
 
-  if (user && request.nextUrl.pathname.startsWith("/login")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
+  // if (user && request.nextUrl.pathname.startsWith("/login")) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/dashboard";
+  //   return NextResponse.redirect(url);
+  // }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:

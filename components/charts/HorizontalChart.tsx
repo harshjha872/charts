@@ -140,8 +140,8 @@ const HorizontalChart = ({
     <Card className="sm:w-1/2 m-4">
       <CardHeader>
         <CardTitle>Bar Chart </CardTitle>
-        <CardDescription>
-          Data available for 4 Oct - 29 Oct 2022 chart
+        <CardDescription className="text-red-500">
+          &#40;NOTE: Data available for 4 Oct - 29 Oct 2022 chart&#41;
         </CardDescription>
       </CardHeader>
       <CardContent>
